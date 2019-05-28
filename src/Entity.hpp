@@ -12,13 +12,15 @@ using namespace std;
 class Entity {
 private:
 // statics
-static default_random_engine generator;
-static uniform_int_distribution<int> distribution;
-const static int COUNT_COLUMN = 8;
-const static int COUNT_ROW = 8;
+    static default_random_engine generator;
+    static uniform_int_distribution<int> distribution;
 // non-statics
-int * data;
+    int * data;
+
 public:
+//static
+    const static int COUNT_COLUMN = 8;
+    const static int COUNT_ROW = 8;
 //statics
     static Entity* generate_random_entity();
 // non-statics
