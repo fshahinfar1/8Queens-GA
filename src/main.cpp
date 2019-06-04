@@ -16,10 +16,10 @@ using namespace std;
 
 
 /*
-*   calculates a fittness value between 1 and 0
+*   calculates a fitness value between 1 and 0
 *   1 is the best fit, meaning no threats.
 */
-float  fittness_function(Entity &e) {
+float  fitness_function(Entity &e) {
     int threats = 0;
     // total possible threats = C(2, 8) = 28
     // this value is for 8 queens
@@ -58,15 +58,15 @@ Entity* select_from_population(Entity* population, const int size) {
     float total_f = 0;
     // calculate sum of f value for normalization
     for (int i = 0; i < size; i++)
-        total_f += fittness_function(population[i]);
+        total_f += fitness_function(population[i]);
     // generate the commulative value
     for (int i = 0; i < size; i++) {
-        normal_f = fittness_function(population[i]) / total_f;
+        normal_f = fitness_function(population[i]) / total_f;
         comulative += normal_f;
         comulative_f[i] = comulative;
     }
     // select parents randomly with
-    // respect to fittness
+    // respect to fitness
     Entity* selected = new Entity[size];
     double max_rnd = (double)(RAND_MAX) + 1;
     for (int i = 0; i < size; i++) {
@@ -145,13 +145,16 @@ void show_population(Entity* population, const int size) {
 }
 
 int main(int argc, char* argv[]) {
+    srand(0);
     // Generate the first population
     const int population_size = 100;
     Entity* population = generate_random_population(population_size);
     // show_population(population, population_size);
     // Continue for some generations
-    const int count_generations = 2000;
-    for (int generation = 0; generation < count_generations; generation++) {
+    //const int count_generations = 2000;
+    //for (int generation = 0; generation < count_generations; generation++) {
+    long long generation = 0;
+    while (1) {
         Entity* selected = select_from_population(population, population_size);
         Entity* new_population = generate_random_population(population_size);
         Entity* overal_selected = concat_population(selected, population_size, new_population, population_size);
@@ -161,24 +164,25 @@ int main(int argc, char* argv[]) {
         delete[] overal_selected; // free memory allocated for all previous population
         population = xover_population; // no mutation yet
         // mutate population
-        // find the best fittness value of population
-        float best_f = fittness_function(population[0]);
+        // find the best fitness value of population
+        float best_f = fitness_function(population[0]);
         int best_index = 0;
         for (int i = 1; i < population_size; i++) {
-            float f = fittness_function(population[i]);
+            float f = fitness_function(population[i]);
             if (f > best_f) {
                 best_f = f;
                 best_index = i;
             }
         }
         cout << "gen: " << generation <<
-        " best fittness: " << best_f <<
+        " best fitness: " << best_f <<
         " index: " << best_index << endl;
         if (best_f == 1) {
             Entity answer = population[best_index];
             cout << "Answer: \n" << answer.to_string() << endl;
             break;
         }
+        generation++;
     }
     return 0;
 }
